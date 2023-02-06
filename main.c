@@ -31,7 +31,13 @@ int main(int argc, char **argv)
     int handlerFnRef = getEventHandler("start");
     lua_rawgeti(L, LUA_REGISTRYINDEX, handlerFnRef);
     lua_pushstring(L, "world!");
-    lua_pcall(L, 1, 0, 0);
+
+    if (lua_pcall(L, 1, 0, 0) != LUA_OK)
+    {
+        fprintf(stderr, "Error: %s\n", lua_tostring(L, -1));
+        error = 1;
+        goto err;
+    }
 
 err:
     lua_close(L);
